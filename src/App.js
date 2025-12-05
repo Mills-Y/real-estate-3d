@@ -69,6 +69,8 @@ const RealEstateScanner = () => {
     }
   ]);
 
+  const PROXY_URL = 'http://localhost:3001';
+
   const createSimple3DModel = (type = 'house') => {
     const group = new THREE.Group();
     
@@ -446,7 +448,7 @@ const RealEstateScanner = () => {
     setCapturedFrames([]);
     
     let frameCount = 0;
-    const totalFrames = 15;
+    const totalFrames = 25;
     
     const interval = setInterval(() => {
       const frame = captureFrame();
@@ -493,132 +495,81 @@ const RealEstateScanner = () => {
   };
 
   const uploadToKiriEngine = async () => {
-    if (!kiriApiKey) {
-      alert('Please set your Kiri Engine API key in Settings first!');
-      setShowSettingsModal(true);
-      return;
+  if (!kiriApiKey) {
+    alert('Please set your Kiri Engine API key in Settings first!');
+    setShowSettingsModal(true);
+    return;
+  }
+
+  if (capturedFrames.length < 20) {
+    alert('Please capture at least 20 images for Kiri Engine processing!');
+    return;
+  }
+
+  try {
+    setIsProcessingKiri(true);
+    setKiriStatus('Uploading images to Kiri Engine...');
+    setKiriProgress(10);
+
+    // Create FormData for our proxy server
+    const formData = new FormData();
+    formData.append('isMesh', '1');
+    formData.append('isMask', '0');
+    formData.append('fileFormat', 'glb');
+
+    // Convert dataURL frames to blobs and append to formData
+    for (let i = 0; i < capturedFrames.length; i++) {
+      const response = await fetch(capturedFrames[i]);
+      const blob = await response.blob();
+      formData.append('images', blob, `image_${i}.jpg`);
     }
 
-    if (capturedFrames.length < 20) {
-      alert('Please capture at least 20 images for Kiri Engine processing!');
-      return;
+    // Send to our proxy server (not directly to Kiri)
+    const uploadResponse = await fetch(`${PROXY_URL}/api/kiri/upload`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${kiriApiKey}`
+      },
+      body: formData
+    });
+
+    if (!uploadResponse.ok) {
+      const errorData = await uploadResponse.json();
+      throw new Error(errorData.msg || 'Failed to upload images');
     }
 
-    try {
-      setIsProcessingKiri(true);
-      setKiriStatus('Uploading images to Kiri Engine...');
-      setKiriProgress(10);
-
-      const formData = new FormData();
-      formData.append('isMesh', '1');
-      formData.append('isMask', '0');
-      formData.append('fileFormat', 'glb');
-
-      // Convert dataURL frames to blobs
-      for (let i = 0; i < capturedFrames.length; i++) {
-        const response = await fetch(capturedFrames[i]);
-        const blob = await response.blob();
-        formData.append('imagesFiles', blob, `image_${i}.jpg`);
-      }
-
-      const uploadResponse = await fetch('https://api.kiriengine.app/api/v1/open/3dgs/image', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${kiriApiKey}`
-        },
-        body: formData
-      });
-
-      if (!uploadResponse.ok) {
-        const errorData = await uploadResponse.json();
-        throw new Error(errorData.msg || 'Failed to upload images');
-      }
-
-      const data = await uploadResponse.json();
-      
-      if (data.ok && data.data.serialize) {
-        setKiriStatus('Upload successful! Processing started...');
-        setKiriProgress(30);
-        pollKiriStatus(data.data.serialize);
-      } else {
-        throw new Error('Invalid response from Kiri Engine');
-      }
-    } catch (error) {
-      console.error('Kiri Engine upload error:', error);
-      alert(`Upload failed: ${error.message}`);
-      setIsProcessingKiri(false);
-      setKiriStatus('');
-      setKiriProgress(0);
+    const data = await uploadResponse.json();
+    
+    if (data.ok && data.data.serialize) {
+      setKiriStatus('Upload successful! Processing started...');
+      setKiriProgress(30);
+      pollKiriStatus(data.data.serialize);
+    } else {
+      throw new Error(data.msg || 'Invalid response from Kiri Engine');
     }
-  };
+  } catch (error) {
+    console.error('Kiri Engine upload error:', error);
+    alert(`Upload failed: ${error.message}`);
+    setIsProcessingKiri(false);
+    setKiriStatus('');
+    setKiriProgress(0);
+  }
+};
 
   const pollKiriStatus = async (serialNumber) => {
-    const maxAttempts = 120;
-    let attempts = 0;
+  // Skip status polling - just wait and try to download periodically
+  let attempts = 0;
+  const maxAttempts = 60; // Try for up to 10 minutes (60 * 10 seconds)
 
-    const checkStatus = async () => {
-      try {
-        const response = await fetch(
-          `https://api.kiriengine.app/api/v1/open/model/${serialNumber}`,
-          {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${kiriApiKey}`
-            }
-          }
-        );
+  const tryDownload = async () => {
+    attempts++;
+    setKiriStatus(`Processing... (attempt ${attempts}/${maxAttempts}) - This may take 5-10 minutes`);
+    setKiriProgress(30 + (attempts * 1));
 
-        if (!response.ok) {
-          throw new Error('Failed to check status');
-        }
-
-        const data = await response.json();
-        
-        if (data.ok && data.data) {
-          const status = data.data.status;
-          
-          switch (status) {
-            case 0:
-              setKiriStatus('Queued for processing...');
-              setKiriProgress(35);
-              break;
-            case 1:
-              setKiriStatus('Processing 3D model...');
-              setKiriProgress(50 + (attempts * 0.3));
-              break;
-            case 2:
-              setKiriStatus('Processing complete! Downloading...');
-              setKiriProgress(90);
-              await downloadKiriModel(serialNumber);
-              return;
-            case 3:
-              throw new Error('Processing failed');
-            default:
-              setKiriStatus('Unknown status');
-          }
-
-          attempts++;
-          if (attempts < maxAttempts) {
-            setTimeout(checkStatus, 5000);
-          } else {
-            throw new Error('Processing timeout');
-          }
-        }
-      } catch (error) {
-        console.error('Status check error:', error);
-        setKiriStatus(`Error: ${error.message}`);
-        setIsProcessingKiri(false);
-        alert(`Processing failed: ${error.message}`);
-      }
-    };
-
-    checkStatus();
-  };
-
-  const downloadKiriModel = async (serialNumber) => {
     try {
+      // Try to download directly - if the model isn't ready, it will fail
       const response = await fetch(
-        `https://api.kiriengine.app/api/v1/open/model/${serialNumber}/download`,
+        `${PROXY_URL}/api/kiri/download/${serialNumber}`,
         {
           method: 'GET',
           headers: {
@@ -627,58 +578,103 @@ const RealEstateScanner = () => {
         }
       );
 
-      if (!response.ok) {
-        throw new Error('Failed to get download link');
-      }
-
       const data = await response.json();
       
       if (data.ok && data.data && data.data.downloadUrl) {
-        setKiriProgress(95);
-        setKiriStatus('Downloading model file...');
-        
-        const modelResponse = await fetch(data.data.downloadUrl);
-        const blob = await modelResponse.blob();
-        
-        const newProperty = {
-          id: Date.now(),
-          title: `Kiri Scanned Property ${properties.length + 1}`,
-          location: 'Location TBD',
-          price: 'Price TBD',
-          image: capturedFrames[0],
-          type: 'kiri-scan',
-          beds: 0,
-          baths: 0,
-          sqft: 'N/A',
-          modelUrl: URL.createObjectURL(blob),
-          serialNumber: serialNumber
-        };
-        
-        setProperties([newProperty, ...properties]);
-        
-        setKiriProgress(100);
-        setKiriStatus('Complete!');
-        
-        setTimeout(() => {
-          setIsProcessingKiri(false);
-          setKiriStatus('');
-          setKiriProgress(0);
-          setShowScanModal(false);
-          stopCamera();
-          setCapturedFrames([]);
-          alert('3D model created successfully with Kiri Engine!');
-        }, 1500);
+        // Model is ready!
+        await downloadKiriModel(serialNumber);
+        return;
+      }
+      
+      // Not ready yet, try again
+      if (attempts < maxAttempts) {
+        setTimeout(tryDownload, 10000); // Wait 10 seconds between attempts
       } else {
-        throw new Error('No download URL in response');
+        throw new Error('Timeout - model may still be processing. Try again later.');
       }
     } catch (error) {
-      console.error('Download error:', error);
-      alert(`Download failed: ${error.message}`);
-      setIsProcessingKiri(false);
-      setKiriStatus('');
-      setKiriProgress(0);
+      if (attempts < maxAttempts) {
+        setTimeout(tryDownload, 10000);
+      } else {
+        setKiriStatus('Processing timeout');
+        setIsProcessingKiri(false);
+        alert(`Processing is taking longer than expected. Your model serial number is: ${serialNumber}\n\nYou can try downloading later from the Kiri Engine website.`);
+      }
     }
   };
+
+  // Start trying after an initial 30-second delay
+  setKiriStatus('Upload complete! Waiting for processing to start...');
+  setTimeout(tryDownload, 30000);
+};
+
+  const downloadKiriModel = async (serialNumber) => {
+  try {
+    // Use proxy server instead of direct Kiri API
+    const response = await fetch(
+      `${PROXY_URL}/api/kiri/download/${serialNumber}`,
+      {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${kiriApiKey}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to get download link');
+    }
+
+    const data = await response.json();
+    
+    if (data.ok && data.data && data.data.downloadUrl) {
+      setKiriProgress(95);
+      setKiriStatus('Downloading model file...');
+      
+      // Download the actual model file
+      const modelResponse = await fetch(data.data.downloadUrl);
+      const blob = await modelResponse.blob();
+      
+      const newProperty = {
+        id: Date.now(),
+        title: `Kiri Scanned Property ${properties.length + 1}`,
+        location: 'Location TBD',
+        price: 'Price TBD',
+        image: capturedFrames[0],
+        type: 'kiri-scan',
+        beds: 0,
+        baths: 0,
+        sqft: 'N/A',
+        modelUrl: URL.createObjectURL(blob),
+        fileType: 'gltf',
+        serialNumber: serialNumber
+      };
+      
+      setProperties([newProperty, ...properties]);
+      
+      setKiriProgress(100);
+      setKiriStatus('Complete!');
+      
+      setTimeout(() => {
+        setIsProcessingKiri(false);
+        setKiriStatus('');
+        setKiriProgress(0);
+        setShowScanModal(false);
+        stopCamera();
+        setCapturedFrames([]);
+        alert('3D model created successfully with Kiri Engine!');
+      }, 1500);
+    } else {
+      throw new Error('No download URL in response');
+    }
+  } catch (error) {
+    console.error('Download error:', error);
+    alert(`Download failed: ${error.message}`);
+    setIsProcessingKiri(false);
+    setKiriStatus('');
+    setKiriProgress(0);
+  }
+};
 
   const handleFileUpload = (e) => {
    const file = e.target.files?.[0];
