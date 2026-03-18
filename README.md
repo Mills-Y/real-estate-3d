@@ -1,215 +1,138 @@
 # 🏠 Real Estate 3D Scanner
 
-A complete real estate platform with 3D model viewing, real-time analytics, and file management capabilities.
+A full-stack web application for interactive 3D property visualization, built with React, Three.js, and Node.js. Features an AI-powered property assistant, voice input, and cloud file storage — deployed live at [realestate3d-demo.com](https://realestate3d-demo.com).
 
-## ⭐ Quick Start
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white)
+![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=flat&logo=cloudflare&logoColor=white)
 
-**Get running in 5 minutes:**
-→ Read [QUICKSTART.md](QUICKSTART.md)
+---
+
+## ✨ Features
+
+- **Interactive 3D Viewer** — Upload and explore property models in-browser using Three.js with orbit controls, lighting, and zoom
+- **AI Property Assistant** — Claude-powered chatbot answers questions about properties using the Anthropic API
+- **Voice Input** — Web Speech API integration lets users speak queries to the AI assistant
+- **Tap-to-Measure** — Three.js raycasting enables click-based distance measurements on 3D models
+- **Cloud Storage** — 3D model files stored in Cloudflare R2 via AWS SDK
+- **Persistent Data** — Property metadata stored in MongoDB Atlas, solving ephemeral storage limitations
+- **User Authentication** — Secure login/register system with Cloudflare Turnstile bot protection
+
+---
+
+## 🛠 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React, Three.js, Web Speech API |
+| Backend | Node.js, Express |
+| Database | MongoDB Atlas |
+| File Storage | Cloudflare R2 (AWS SDK) |
+| AI | Anthropic Claude API |
+| Hosting | Cloudflare Pages (frontend), Render (backend) |
+| Auth/Security | Cloudflare Turnstile |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- MongoDB Atlas account
+- Cloudflare R2 bucket
+- Anthropic API key
+
+### Installation
 
 ```bash
-# Install & run
-npm install && cd backend && npm install && cd ..
+# Clone the repo
+git clone https://github.com/Crawv01/real-estate-3d.git
+cd real-estate-3d
 
-# Terminal 1: Backend
-cd backend && npm run dev
+# Install frontend dependencies
+npm install
 
-# Terminal 2: Frontend  
+# Install backend dependencies
+cd backend
+npm install
+```
+
+### Environment Variables
+
+Create a `.env` file in the `backend` directory:
+
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+CLOUDFLARE_R2_BUCKET=your_bucket_name
+CLOUDFLARE_R2_ENDPOINT=your_r2_endpoint
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+ANTHROPIC_API_KEY=your_anthropic_key
+```
+
+### Running Locally
+
+```bash
+# Start backend
+cd backend
+npm run dev
+
+# Start frontend (new terminal)
+cd ..
 npm start
 ```
 
-Visit: **http://localhost:3000**
+Frontend runs at `http://localhost:3000`, backend at `http://localhost:5000`.
 
-## 📚 Documentation Index
+---
 
-| Document | Purpose | Time |
-|----------|---------|------|
-| **[QUICKSTART.md](QUICKSTART.md)** ⭐ | Get running fast | 5 min |
-| **[SETUP_GUIDE.md](SETUP_GUIDE.md)** | Complete setup | 20 min |
-| **[backend/README.md](backend/README.md)** | API reference | Reference |
-| **[FRONTEND_BACKEND_INTEGRATION.md](FRONTEND_BACKEND_INTEGRATION.md)** | Connect frontend/backend | 30 min |
-| **[ANALYTICS_TRACKING.md](ANALYTICS_TRACKING.md)** | Tracking details | Reference |
-| **[ENHANCED_ANALYTICS_SUMMARY.md](ENHANCED_ANALYTICS_SUMMARY.md)** | Features overview | Reference |
-
-## 🎯 Features
-
-✅ **3D Model Viewer** - Interactive Babylon.js viewer
-✅ **File Upload** - Support for GLB, GLTF, PLY, OBJ, FBX
-✅ **Real-time Analytics** - Event tracking & engagement scoring
-✅ **Dashboard** - Visual analytics with charts & heatmaps
-✅ **Data Export** - CSV and JSON report downloads
-✅ **Property Management** - CRUD operations for properties
-✅ **REST API** - Production-ready Express backend
-✅ **CORS Enabled** - Ready for cross-origin requests
-
-## 🏗️ Architecture
+## 📁 Project Structure
 
 ```
-Frontend (React)          Backend (Express)       Database
-   ↓                          ↓                      ↓
-- 3D Viewer          - API Routes          - JSON File
-- Gallery            - File Upload         - Model Storage
-- Analytics          - CRUD Ops            - Metadata
-- Dashboard          - Middleware
+real-estate-3d/
+├── src/
+│   ├── components/
+│   │   ├── ModelViewer.js       # Three.js 3D viewer component
+│   │   ├── AIAssistant.js       # Claude-powered chat with voice input
+│   │   └── MeasureTool.js       # Raycasting tap-to-measure feature
+│   ├── pages/
+│   │   ├── Home.js              # Property listings
+│   │   └── PropertyDetail.js    # Individual property with 3D viewer
+│   └── App.js
+├── backend/
+│   ├── server.js                # Express server
+│   ├── routes/
+│   │   ├── upload.js            # File upload to Cloudflare R2
+│   │   ├── models.js            # Property CRUD operations
+│   │   └── ai.js                # Anthropic API integration
+│   └── middleware/
+│       └── multerConfig.js      # File upload config
+└── README.md
 ```
 
-## 🚀 Scripts
+---
 
-### Frontend
-```bash
-npm start      # Start development server (port 3000)
-npm build      # Create production build
-npm test       # Run tests
-```
+## 🌐 Live Demo
 
-### Backend
-```bash
-cd backend
-npm start      # Start server (port 5000)
-npm run dev    # Start with auto-reload
-```
+**[realestate3d-demo.com](https://realestate3d-demo.com)**
 
-## 📊 API Endpoints
+---
 
-```
-GET     /api/models              List all models
-GET     /api/models/:id          Get specific model
-POST    /api/upload              Upload 3D file
-PUT     /api/models/:id          Update metadata
-DELETE  /api/models/:id          Delete model
-POST    /api/models/:id/views    Track view
-GET     /api/models/stats/summary Get statistics
-```
+## 📸 Key Implementation Details
 
-Full reference: [backend/README.md](backend/README.md)
+**MongoDB Atlas Integration** — Migrated from JSON file storage to MongoDB Atlas to solve Render's ephemeral filesystem problem. Property metadata persists across deployments.
 
-## 🔗 Integration
+**Cloudflare R2 Storage** — 3D model files (GLB, GLTF, OBJ, PLY, FBX) are uploaded directly to R2 using the AWS SDK S3-compatible API, keeping large binary files out of the database.
 
-Connect frontend to backend:
-→ See [FRONTEND_BACKEND_INTEGRATION.md](FRONTEND_BACKEND_INTEGRATION.md)
+**AI Assistant** — Uses the Anthropic API with property context injected into the system prompt, so Claude can answer specific questions about square footage, price, and features for each listing.
 
-## 📈 Analytics
+**Voice Input** — Web Speech API transcribes spoken queries and sends them to the AI assistant, enabling hands-free property exploration.
 
-- 11+ tracked events
-- Real-time engagement scoring
-- Heat map visualization
-- CSV/JSON export
-- Browser-based persistence
+---
 
-Details: [ANALYTICS_TRACKING.md](ANALYTICS_TRACKING.md)
+## 📄 License
 
-## 🔒 Security
-
-- CORS configured for frontend
-- File type validation
-- Input sanitization
-- Error handling
-- No sensitive data exposure
-
-## 🐛 Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| Port in use | Change PORT in .env |
-| CORS error | Check CORS_ORIGIN in backend/.env |
-| Models won't load | Verify backend is running |
-| Upload fails | Check file type & size |
-
-See [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed troubleshooting.
-
-## 📦 Tech Stack
-
-- **Frontend:** React 18+, Babylon.js, Recharts, CSS3
-- **Backend:** Node.js, Express 4.18+, Multer, UUID
-- **Database:** JSON (development), ready for MongoDB
-- **Analytics:** Window Storage API, custom tracking
-
-## 🚢 Deployment
-
-See [SETUP_GUIDE.md](SETUP_GUIDE.md#-production-deployment) for production checklist and deployment guides.
-
-## 📚 Project Structure
-
-```
-real-estate-3d-main/
-├── src/                    # React frontend
-├── backend/               # Express API
-├── public/                # Static assets
-├── QUICKSTART.md          # 5-min setup
-├── SETUP_GUIDE.md         # Full setup
-├── ANALYTICS_TRACKING.md  # Tracking ref
-└── ... (other docs)
-```
-
-## 🆘 Need Help?
-
-1. Check relevant documentation file
-2. Review console errors (F12)
-3. Test endpoints with curl
-4. Check .env configuration
-5. See troubleshooting sections
-
-## 📝 Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-Runs the frontend in development mode.
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-### `npm test`
-Launches the test runner in interactive watch mode.
-
-### `npm run build`
-Builds the app for production to the `build` folder.
-
-## 🎓 Getting Started
-
-1. **New to this project?**
-   → Start with [QUICKSTART.md](QUICKSTART.md)
-
-2. **Setting up for development?**
-   → Read [SETUP_GUIDE.md](SETUP_GUIDE.md)
-
-3. **Want to understand the API?**
-   → See [backend/README.md](backend/README.md)
-
-4. **Need to integrate frontend & backend?**
-   → Check [FRONTEND_BACKEND_INTEGRATION.md](FRONTEND_BACKEND_INTEGRATION.md)
-
-5. **Interested in analytics?**
-   → Review [ANALYTICS_TRACKING.md](ANALYTICS_TRACKING.md)
-
-## ✨ Version
-
-**v1.0.0** - December 17, 2025
-
-## 📄 Learn More
-
-See documentation files for detailed information on:
-- Installation & setup
-- API endpoints
-- Analytics tracking
-- Frontend-backend integration
-- Deployment strategies
-- Troubleshooting
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+MIT
