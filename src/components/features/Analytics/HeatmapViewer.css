@@ -1,0 +1,149 @@
+/* HeatmapViewer Styles */
+
+.heatmap-container {
+  background: rgba(17, 24, 39, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: 20px;
+  padding: 1.5rem;
+  backdrop-filter: blur(20px);
+}
+
+/* Header */
+.heatmap-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.heatmap-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.heatmap-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
+  color: white;
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3);
+}
+
+.heatmap-title h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.heatmap-title p {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin: 0.25rem 0 0 0;
+}
+
+/* Canvas */
+.heatmap-canvas-wrapper {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0a0f1a;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.heatmap-canvas {
+  display: block;
+  width: 100%;
+  height: 350px;
+  border-radius: 12px;
+}
+
+/* Info Section */
+.heatmap-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+@media (max-width: 640px) {
+  .heatmap-info {
+    grid-template-columns: 1fr;
+  }
+}
+
+.heatmap-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  transition: all 0.2s ease;
+}
+
+.heatmap-info-item:hover {
+  border-color: rgba(148, 163, 184, 0.2);
+  background: rgba(30, 41, 59, 0.7);
+}
+
+.heatmap-info-item .info-dot {
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-top: 4px;
+}
+
+.heatmap-info-item.hot .info-dot {
+  background: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+}
+
+.heatmap-info-item.cold .info-dot {
+  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+}
+
+.heatmap-info-item strong {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #f8fafc;
+  margin-bottom: 0.25rem;
+}
+
+.heatmap-info-item p {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Empty State */
+.heatmap-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  color: #64748b;
+  text-align: center;
+}
+
+.heatmap-empty svg {
+  opacity: 0.3;
+  margin-bottom: 1rem;
+}
+
+.heatmap-empty p {
+  font-size: 0.875rem;
+}

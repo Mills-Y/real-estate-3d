@@ -1,0 +1,250 @@
+/* EngagementChart Styles */
+
+.engagement-chart {
+  background: rgba(17, 24, 39, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: 20px;
+  padding: 1.5rem;
+  backdrop-filter: blur(20px);
+}
+
+.engagement-chart.compact {
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+/* Header */
+.engagement-chart-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.engagement-chart.compact .engagement-chart-header {
+  margin-bottom: 1rem;
+}
+
+.engagement-chart-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.engagement-chart-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+}
+
+.engagement-chart.compact .engagement-chart-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.engagement-chart-title h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.engagement-chart.compact .engagement-chart-title h2 {
+  font-size: 0.875rem;
+}
+
+.engagement-chart-title p {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin: 0.25rem 0 0 0;
+}
+
+.engagement-chart.compact .engagement-chart-title p {
+  display: none;
+}
+
+/* Controls */
+.engagement-chart-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.time-range-selector {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 10px;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.time-range-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.time-range-btn:hover {
+  color: #f8fafc;
+  background: rgba(148, 163, 184, 0.1);
+}
+
+.time-range-btn.active {
+  color: white;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+}
+
+/* Stats Summary */
+.engagement-stats {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+  background: rgba(30, 41, 59, 0.4);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.engagement-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.stat-value.stat-scans {
+  color: #06b6d4;
+}
+
+.stat-value.stat-views {
+  color: #10b981;
+}
+
+.stat-value.stat-exports {
+  color: #f59e0b;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Chart Container */
+.engagement-chart-container {
+  margin: 0 -0.5rem;
+}
+
+/* Tooltip */
+.chart-tooltip {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.chart-tooltip-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin: 0 0 0.75rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.chart-tooltip-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.chart-tooltip-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chart-tooltip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.chart-tooltip-name {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.chart-tooltip-value {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-left: auto;
+}
+
+/* Compact Legend */
+.compact-legend {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .engagement-chart-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .engagement-stats {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .engagement-stat {
+    flex: 1;
+    min-width: 100px;
+  }
+}

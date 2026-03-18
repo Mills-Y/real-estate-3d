@@ -1,0 +1,218 @@
+/* Main App Container */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+}
+
+.app-header {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* App Main with Panel Support */
+.app-main-with-panel {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.app-gallery-section {
+  flex: 1;
+  overflow-y: auto;
+  transition: flex 0.3s ease;
+  padding: 0;
+}
+
+/* Analytics Side Panel */
+.app-analytics-panel {
+  width: 420px;
+  border-left: 1px solid rgba(148, 163, 184, 0.1);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%);
+  overflow-y: auto;
+  transition: width 0.3s ease;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+}
+
+.dashboard-panel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Centered Section */
+.centered-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Button Group */
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+/* Gallery Grid */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 0;
+  width: 100%;
+  margin: 0;
+  justify-items: center;
+}
+
+/* Scrollbar Styling */
+.app-gallery-section::-webkit-scrollbar,
+.app-analytics-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.app-gallery-section::-webkit-scrollbar-track,
+.app-analytics-panel::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.3);
+}
+
+.app-gallery-section::-webkit-scrollbar-thumb,
+.app-analytics-panel::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 4px;
+}
+
+.app-gallery-section::-webkit-scrollbar-thumb:hover,
+.app-analytics-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.4);
+}
+
+/* Responsive adjustments for tablet */
+@media (max-width: 1024px) {
+  .app-analytics-panel {
+    width: 380px;
+  }
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+  .app-gallery-section {
+    padding: 0;
+  }
+
+  .app-analytics-panel {
+    width: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    border-left: none;
+    border-top: 1px solid rgba(148, 163, 184, 0.1);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .app-main-with-panel {
+    flex-direction: column;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .button-group {
+    gap: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-gallery-section {
+    padding: 0;
+  }
+
+  .gallery-grid {
+    gap: 0;
+  }
+
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+  }
+  
+  .app-analytics-panel {
+    width: 100%;
+  }
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

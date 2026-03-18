@@ -1,0 +1,51 @@
+/**
+ * Sample properties with enhanced metadata for analytics
+ */
+
+export const sampleProperties = [
+  {
+    id: 1001,
+    title: 'Modern Office Tower',
+    location: 'Downtown Seattle, WA',
+    price: '$450K - $600K',
+    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop',
+    type: 'scan',
+    beds: 0,
+    baths: 0,
+    sqft: '15,000',
+    views: 342,
+    engagement: 85,
+    scans: 12,
+    lastViewed: new Date(Date.now() - 2 * 60 * 60 * 1000),
+  },
+  {
+    id: 1002,
+    title: 'Luxury Residence',
+    location: 'Pacific Heights, San Francisco',
+    price: '$2.8M - $3.2M',
+    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=300&fit=crop',
+    type: 'upload',
+    beds: 5,
+    baths: 4,
+    sqft: '5,200',
+    views: 198,
+    engagement: 72,
+    scans: 8,
+    lastViewed: new Date(Date.now() - 5 * 60 * 60 * 1000),
+  },
+  {
+    id: 1003,
+    title: 'Industrial Warehouse',
+    location: 'Oakland, CA',
+    price: '$800K - $1.2M',
+    image: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?w=400&h=300&fit=crop',
+    type: 'scan',
+    beds: 0,
+    baths: 0,
+    sqft: '25,000',
+    views: 156,
+    engagement: 68,
+    scans: 5,
+    lastViewed: new Date(Date.now() - 12 * 60 * 60 * 1000),
+  },
+];
