@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: realestate3d-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CORS_ORIGIN
+        value: https://realestate3d-demo.com
+      - key: JWT_SECRET
+        sync: false          # Set manually in Render dashboard (secret)
+      - key: MONGODB_URI
+        sync: false          # Set manually in Render dashboard (secret)
+      - key: MONGODB_DB_NAME
+        value: 3d-scanning-platform
+      - key: TURNSTILE_SECRET_KEY
+        sync: false          # Set manually in Render dashboard (secret)
+      - key: MAX_FILE_SIZE
+        value: "100000000"
+      - key: UPLOAD_DIR
+        value: ./uploads/models
