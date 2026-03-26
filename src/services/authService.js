@@ -1,19 +1,5 @@
 // Authentication API Service
-
-// Determine API base URL based on environment
-const getApiBaseUrl = () => {
-  const hostname = window.location.hostname;
-  
-  // Production: use Render backend
-  if (hostname === 'realestate3d-demo.com' || hostname.includes('workers.dev')) {
-    return 'https://realestate3d-backend.onrender.com/api';
-  }
-  
-  // Development: use localhost or local network IP
-  return `http://${hostname}:5000/api`;
-};
-
-const API_BASE_URL = getApiBaseUrl();
+import { API_BASE_URL } from './apiConfig';
 
 // Log which API we're using
 console.log('🔐 Auth API URL:', API_BASE_URL);
@@ -161,7 +147,7 @@ export const authAPI = {
  * Helper function to get current auth token
  */
 export const getAuthToken = () => {
-  const sessionData = window.storage.get('authSession');
+  const sessionData = window.storage?.get('authSession');
   return sessionData?.token || null;
 };
 
@@ -169,7 +155,7 @@ export const getAuthToken = () => {
  * Helper function to get current user
  */
 export const getCurrentUser = () => {
-  const sessionData = window.storage.get('authSession');
+  const sessionData = window.storage?.get('authSession');
   return sessionData?.user || null;
 };
 

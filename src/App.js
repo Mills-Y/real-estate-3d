@@ -379,6 +379,8 @@ const RealEstateScanner = () => {
         };
 
         setProperties((prev) => [newProperty, ...prev]);
+        setGalleryRefreshKey((prev) => prev + 1);
+        setActiveTab('myuploads');
         setShowUploadModal(false);
         setUploadProgress(0);
 

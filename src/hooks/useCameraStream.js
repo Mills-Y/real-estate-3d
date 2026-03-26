@@ -16,7 +16,7 @@ export const useCameraStream = () => {
       return 'Camera is unavailable in this browser context. Use HTTPS (or localhost) and try again.';
     }
 
-    if (!globalThis.isSecureContext) {
+    if (!window.isSecureContext) {
       return 'Camera access requires a secure context. Open the app using HTTPS (or localhost).';
     }
 

@@ -3,16 +3,7 @@
  * Handles communication with the AI backend endpoints
  */
 
-// Get API base URL
-const getApiBaseUrl = () => {
-  const hostname = window.location.hostname;
-  if (hostname === 'realestate3d-demo.com' || hostname.includes('workers.dev') || hostname.includes('pages.dev')) {
-    return 'https://realestate3d-backend.onrender.com/api';
-  }
-  return `http://${hostname}:5000/api`;
-};
-
-const API_BASE_URL = getApiBaseUrl();
+import { API_BASE_URL } from './apiConfig';
 
 /**
  * Send a chat message to the AI assistant
@@ -91,12 +82,12 @@ export const getPropertyDescription = async (modelId) => {
  */
 export const speechToText = () => {
   return new Promise((resolve, reject) => {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    if (!('webkitSpeechRecognition' in globalThis) && !('SpeechRecognition' in globalThis)) {
       reject(new Error('Speech recognition not supported'));
       return;
     }
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = globalThis.SpeechRecognition || globalThis.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
     
     recognition.continuous = false;
@@ -122,13 +113,13 @@ export const speechToText = () => {
  * @param {Object} options - Voice options
  */
 export const textToSpeech = (text, options = {}) => {
-  if (!('speechSynthesis' in window)) {
+  if (!('speechSynthesis' in globalThis)) {
     console.warn('Text-to-speech not supported');
     return;
   }
 
   // Cancel any ongoing speech
-  window.speechSynthesis.cancel();
+  globalThis.speechSynthesis.cancel();
 
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.rate = options.rate || 1;
@@ -136,7 +127,7 @@ export const textToSpeech = (text, options = {}) => {
   utterance.volume = options.volume || 1;
 
   // Use a natural voice if available
-  const voices = window.speechSynthesis.getVoices();
+  const voices = globalThis.speechSynthesis.getVoices();
   const preferredVoice = voices.find(v => 
     v.name.includes('Google') || 
     v.name.includes('Natural') ||
@@ -146,7 +137,7 @@ export const textToSpeech = (text, options = {}) => {
     utterance.voice = preferredVoice;
   }
 
-  window.speechSynthesis.speak(utterance);
+  globalThis.speechSynthesis.speak(utterance);
 };
 
 /**

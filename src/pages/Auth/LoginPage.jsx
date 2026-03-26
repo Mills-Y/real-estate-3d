@@ -3,23 +3,12 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { Eye, EyeOff, Home, Lock, Mail, AlertCircle } from 'lucide-react';
 import Turnstile from '../../components/common/Turnstile';
+import { API_BASE_URL } from '../../services/apiConfig';
 import './AuthPages.css';
 
 // Cloudflare Turnstile Site Key
-const TURNSTILE_SITE_KEY = '0x4AAAAAAChiVEGYB4kJISDZ';
-
-// Get API base URL (dynamic for production and development)
-const getApiBaseUrl = () => {
-  const hostname = window.location.hostname;
-  
-  // Production: use Render backend
-  if (hostname === 'realestate3d-demo.com' || hostname.includes('workers.dev')) {
-    return 'https://realestate3d-backend.onrender.com/api';
-  }
-  
-  // Development: use localhost or local network IP
-  return `http://${hostname}:5000/api`;
-};
+const TURNSTILE_SITE_KEY = process.env.REACT_APP_TURNSTILE_SITE_KEY || '0x4AAAAAAChiVEGYB4kJISDZ';
+const SHOULD_ENFORCE_TURNSTILE = process.env.REACT_APP_ENFORCE_TURNSTILE === 'true' || process.env.NODE_ENV === 'production';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -62,8 +51,8 @@ export default function LoginPage() {
       return false;
     }
 
-    // Check Turnstile verification
-    if (!turnstileToken) {
+    // Check Turnstile verification when enforcement is enabled
+    if (SHOULD_ENFORCE_TURNSTILE && !turnstileToken) {
       setError('Please complete the security verification');
       return false;
     }
@@ -80,20 +69,22 @@ export default function LoginPage() {
     setError('');
 
     try {
-      // Verify Turnstile token with backend
-      const verifyResponse = await fetch(`${getApiBaseUrl()}/turnstile/verify`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: turnstileToken }),
-      });
+      if (SHOULD_ENFORCE_TURNSTILE) {
+        // Verify Turnstile token with backend
+        const verifyResponse = await fetch(`${API_BASE_URL}/turnstile/verify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: turnstileToken }),
+        });
 
-      const verifyResult = await verifyResponse.json();
+        const verifyResult = await verifyResponse.json();
 
-      if (!verifyResult.success) {
-        setError('Security verification failed. Please refresh and try again.');
-        setTurnstileToken(null);
-        setIsSubmitting(false);
-        return;
+        if (!verifyResult.success) {
+          setError('Security verification failed. Please refresh and try again.');
+          setTurnstileToken(null);
+          setIsSubmitting(false);
+          return;
+        }
       }
 
       // Proceed with login
@@ -209,35 +200,38 @@ export default function LoginPage() {
             </div>
 
             {/* Cloudflare Turnstile Widget */}
-            <Turnstile
-              siteKey={TURNSTILE_SITE_KEY}
-              onVerify={(token) => {
-                console.log('✅ Turnstile verified');
-                setTurnstileToken(token);
-              }}
-              onError={() => {
-                setError('Security check failed. Please refresh the page.');
-                setTurnstileToken(null);
-              }}
-              onExpire={() => {
-                setTurnstileToken(null);
-              }}
-              theme="dark"
-            />
+            {SHOULD_ENFORCE_TURNSTILE && (
+              <Turnstile
+                siteKey={TURNSTILE_SITE_KEY}
+                onVerify={(token) => {
+                  console.log('✅ Turnstile verified');
+                  setTurnstileToken(token);
+                }}
+                onError={() => {
+                  setError('Security check failed. Please refresh the page.');
+                  setTurnstileToken(null);
+                }}
+                onExpire={() => {
+                  setTurnstileToken(null);
+                }}
+                theme="dark"
+              />
+            )}
 
             {/* Submit button */}
             <button
               type="submit"
               className="auth-submit-button"
-              disabled={isSubmitting || loading || !turnstileToken}
+              disabled={isSubmitting || loading || (SHOULD_ENFORCE_TURNSTILE && !turnstileToken)}
               style={{
-                opacity: (!turnstileToken || isSubmitting || loading) ? 0.6 : 1,
-                cursor: (!turnstileToken || isSubmitting || loading) ? 'not-allowed' : 'pointer'
+                opacity: ((SHOULD_ENFORCE_TURNSTILE && !turnstileToken) || isSubmitting || loading) ? 0.6 : 1,
+                cursor: ((SHOULD_ENFORCE_TURNSTILE && !turnstileToken) || isSubmitting || loading) ? 'not-allowed' : 'pointer'
               }}
             >
               {isSubmitting ? (
                 <span className="auth-loading">
-                  <span className="auth-spinner"></span>
+                  <span className="auth-spinner" />
+                  {' '}
                   Signing in...
                 </span>
               ) : (

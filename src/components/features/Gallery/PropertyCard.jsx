@@ -4,7 +4,7 @@ import { Eye, Trash2, Share2, Package, Loader } from 'lucide-react';
 import { trackEvent } from '../../../services/analyticsService';
 import { getCachedThumbnail, getOrGenerateThumbnail } from '../../../services/thumbnailPreloader';
 
-const PropertyCard = ({ property, onView, onDelete }) => {
+const PropertyCard = ({ property, onView, onDelete, showDelete }) => {
   const [imageError, setImageError] = useState(false);
   const [generatedThumbnail, setGeneratedThumbnail] = useState(null);
   const [isLoadingThumbnail, setIsLoadingThumbnail] = useState(true);
@@ -200,34 +200,36 @@ const PropertyCard = ({ property, onView, onDelete }) => {
             <Eye className="w-4 h-4" />
             View 3D
           </button>
-          <button
-            onClick={handleDelete}
-            style={{
-              padding: '0.625rem 0.75rem',
-              borderRadius: '0.75rem',
-              transition: 'all 300ms',
-              background: 'rgba(239, 68, 68, 0.1)',
-              color: '#ef4444',
-              border: '1px solid rgba(239, 68, 68, 0.2)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              minWidth: '40px',
-              minHeight: '40px',
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = '#ef4444';
-              e.target.style.color = 'white';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = 'rgba(239, 68, 68, 0.1)';
-              e.target.style.color = '#ef4444';
-            }}
-            title="Delete property"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
+          {showDelete && (
+            <button
+              onClick={handleDelete}
+              style={{
+                padding: '0.625rem 0.75rem',
+                borderRadius: '0.75rem',
+                transition: 'all 300ms',
+                background: 'rgba(239, 68, 68, 0.1)',
+                color: '#ef4444',
+                border: '1px solid rgba(239, 68, 68, 0.2)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minWidth: '40px',
+                minHeight: '40px',
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = '#ef4444';
+                e.target.style.color = 'white';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'rgba(239, 68, 68, 0.1)';
+                e.target.style.color = '#ef4444';
+              }}
+              title="Delete property"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
           <button
             style={{
               padding: '0.625rem 0.75rem',
@@ -275,6 +277,11 @@ PropertyCard.propTypes = {
   }).isRequired,
   onView: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  showDelete: PropTypes.bool,
+};
+
+PropertyCard.defaultProps = {
+  showDelete: true,
 };
 
 export default PropertyCard;

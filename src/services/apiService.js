@@ -1,23 +1,10 @@
 /**
  * API Service for Real Estate 3D Scanner
  * Handles all communication with the backend server
- * Dynamically switches between localhost (dev) and Render (production)
+ * Uses environment-driven API endpoints for portable deployments
  */
 
-// Determine API base URL based on environment
-const getApiBaseUrl = () => {
-  const hostname = window.location.hostname;
-  
-  // Production: use Render backend
-  if (hostname === 'realestate3d-demo.com' || hostname.includes('workers.dev') || hostname.includes('pages.dev')) {
-    return 'https://realestate3d-backend.onrender.com/api';
-  }
-  
-  // Development: use localhost or local network IP
-  return `http://${hostname}:5000/api`;
-};
-
-const API_BASE_URL = getApiBaseUrl();
+import { API_BASE_URL, API_ORIGIN } from './apiConfig';
 
 // Log which API we're using
 console.log('🔗 API URL:', API_BASE_URL);
@@ -48,14 +35,7 @@ export const getModelURL = (modelPath) => {
     return modelPath;
   }
   
-  // Production: use Render backend
-  const hostname = window.location.hostname;
-  if (hostname === 'realestate3d-demo.com' || hostname.includes('workers.dev') || hostname.includes('pages.dev')) {
-    return `https://realestate3d-backend.onrender.com${modelPath}`;
-  }
-  
-  // Development: use current hostname
-  return `http://${hostname}:5000${modelPath}`;
+  return `${API_ORIGIN}${modelPath}`;
 };
 
 /**

@@ -3,18 +3,9 @@
  * Proxy-first implementation with fallback support
  */
 
-// Dynamic API base URL for production/development
-const getKiriProxyBase = () => {
-  const hostname = window.location.hostname;
-  
-  // Production: use Render backend
-  if (hostname === 'realestate3d-demo.com' || hostname.includes('workers.dev') || hostname.includes('pages.dev')) {
-    return 'https://realestate3d-backend.onrender.com/api/kiri';
-  }
-  
-  // Development: use localhost or local network IP
-  return `http://${hostname}:5000/api/kiri`;
-};
+import { API_BASE_URL } from './apiConfig';
+
+const getKiriProxyBase = () => `${API_BASE_URL}/kiri`;
 
 const KIRI_API_BASE = 'https://api.kiriengine.app/api/v1/open';
 const USE_MOCK_MODE = process.env.REACT_APP_USE_MOCK_KIRI === 'true';
