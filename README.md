@@ -121,7 +121,7 @@ real-estate-3d/
 
 ---
 
-## 📸 Key Implementation Details
+##  Key Implementation Details
 
 **MongoDB Atlas Integration** — Migrated from JSON file storage to MongoDB Atlas to solve Render's ephemeral filesystem problem. Property metadata persists across deployments.
 
@@ -133,6 +133,6 @@ real-estate-3d/
 
 ---
 
-## 📄 License
+##  License
 
 MIT
