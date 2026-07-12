@@ -1,4 +1,4 @@
-# 🏠 Real Estate 3D Scanner
+#  Real Estate 3D Scanner
 
 A full-stack web application for interactive 3D property visualization, built with React, Three.js, and Node.js. Features an AI-powered property assistant, voice input, and cloud file storage — deployed live at [realestate3d-demo.com](https://realestate3d-demo.com).
 
@@ -10,7 +10,7 @@ A full-stack web application for interactive 3D property visualization, built wi
 
 ---
 
-## ✨ Features
+##  Features
 
 - **Interactive 3D Viewer** — Upload and explore property models in-browser using Three.js with orbit controls, lighting, and zoom
 - **AI Property Assistant** — Claude-powered chatbot answers questions about properties using the Anthropic API
@@ -36,7 +36,7 @@ A full-stack web application for interactive 3D property visualization, built wi
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Node.js 18+
@@ -89,7 +89,7 @@ Frontend runs at `http://localhost:3000`, backend at `http://localhost:5000`.
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 real-estate-3d/
@@ -115,7 +115,7 @@ real-estate-3d/
 
 ---
 
-## 🌐 Live Demo
+##  Live Demo
 
 **[realestate3d-demo.com](https://realestate3d-demo.com)**
 
